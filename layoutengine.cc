@@ -9,9 +9,13 @@ LayoutEngine::~LayoutEngine()
 
 PropertyHolder LayoutEngine::calculate()
 {
+    long fontSize = 36;
+    qreal margin = fontSize * 0.5;
+    long fontScale = 64;
+
     Q_ASSERT(FT_Init_FreeType(&m_library) == 0);
     Q_ASSERT(FT_New_Face(m_library, m_font.toUtf8().data(), 0, &m_face) == 0);
-    Q_ASSERT(FT_Set_Char_Size(m_face, m_face->units_per_EM, 0, 0, 0) == 0) ;
+    Q_ASSERT(FT_Set_Char_Size(m_face, fontSize, 0, 0, 0) == 0) ;
 
     m_rq = raqm_create();
     Q_ASSERT(m_rq);
@@ -36,14 +40,14 @@ PropertyHolder LayoutEngine::calculate()
     qreal x = 0.0, y = 0.0;
     for(int i=0; i<static_cast<int>(count); i++) {
         glyphIndexes[i] = glyphs[i].index;
-        glyphPositions[i] = QPointF(x + glyphs[i].x_offset, y - glyphs[i].y_offset)/10;
+        glyphPositions[i] = QPointF(x + glyphs[i].x_offset, y - glyphs[i].y_offset)/2;
         x += glyphs[i].x_advance;
         y -= glyphs[i].y_advance;
     }
 
 
     QGlyphRun glyphRun = QGlyphRun();
-    QRawFont rawFont = QRawFont(m_font, m_face->units_per_EM);
+    QRawFont rawFont = QRawFont(m_font, fontSize);
     glyphRun.setRawFont(rawFont);
     glyphRun.setGlyphIndexes(glyphIndexes);
     glyphRun.setPositions(glyphPositions);
@@ -51,7 +55,7 @@ PropertyHolder LayoutEngine::calculate()
     PropertyHolder p;
     p.glyph = glyphRun;
     p.font = rawFont;
-    p.margin = 10;
-    p.scale = 10;
+    p.margin = margin;
+    p.scale = fontScale;
     return p;
 }

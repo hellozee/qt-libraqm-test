@@ -15,7 +15,7 @@ void PaintWidget::paintEvent(QPaintEvent *e)
     QPainter painter(this);
     Q_ASSERT(m_font.isValid());
     painter.drawGlyphRun(QPointF(m_margin, m_font.ascent() + m_margin), m_glyphRun);
-    resize(m_displacement/m_scale + m_margin*2, m_font.ascent() + m_font.descent() + m_margin*2);
+    //resize(m_displacement/m_scale + m_margin*2, m_font.ascent() + m_font.descent() + m_margin*2);
 }
 
 void PaintWidget::setProperties(PropertyHolder p)
