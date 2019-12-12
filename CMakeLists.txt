@@ -38,7 +38,8 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(RAQM REQUIRED IMPORTED_TARGET raqm)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${RAQM_INCLUDE_DIRS})
-set(SOURCES main.cc mainwindow.cc paintwidget.cc layoutengine.cc)
+include_directories(external/svgpp/include/ external/svgpp/third_party/)
+set(SOURCES main.cc mainwindow.cc paintwidget.cc layoutengine.cc svghandler.cpp)
 
 add_executable( ${PROJECT_NAME} ${SOURCES})
 target_link_libraries( ${PROJECT_NAME} Qt5::Core Qt5::Widgets Qt5::Gui ${RAQM_LIBRARIES})
