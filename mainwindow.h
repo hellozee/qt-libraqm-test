@@ -17,6 +17,9 @@ public:
     ~MainWindow();
 
 private slots:
+    void on_sizeBox_valueChanged(int size);
+
+private slots:
     void on_doneBtn_clicked();
     void on_fontBtn_clicked();
 

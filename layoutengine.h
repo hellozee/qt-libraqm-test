@@ -21,6 +21,7 @@ public:
 
     inline void setFont(QString font) { m_font = font; }
     inline void setText(QString text) { m_text = text; }
+    inline void setFontSize(int size) { m_fontSize = size; }
     PropertyHolder calculate();
 
 private:
@@ -30,6 +31,7 @@ private:
     FT_Face m_face;
     FT_Library m_library;
     raqm_t *m_rq;
+    int m_fontSize;
 };
 
 #endif // LAYOUTENGINE_H

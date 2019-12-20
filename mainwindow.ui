@@ -25,6 +25,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QSpinBox" name="sizeBox">
+        <property name="maximum">
+         <number>200</number>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLineEdit" name="textBox"/>
       </item>
       <item>
@@ -44,6 +51,17 @@
         <verstretch>20</verstretch>
        </sizepolicy>
       </property>
+      <widget class="QWidget" name="formLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>280</x>
+         <y>210</y>
+         <width>160</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout"/>
+      </widget>
      </widget>
     </item>
    </layout>

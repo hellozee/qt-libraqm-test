@@ -42,3 +42,8 @@ void MainWindow::on_doneBtn_clicked()
     p->setProperties(m_layoutEngine.calculate());
     p->update();
 }
+
+void MainWindow::on_sizeBox_valueChanged(int size)
+{
+    m_layoutEngine.setFontSize(size);
+}
