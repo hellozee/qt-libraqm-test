@@ -10,7 +10,7 @@ LayoutEngine::~LayoutEngine()
 PropertyHolder LayoutEngine::calculate()
 {
     qreal margin = m_fontSize * 0.5;
-    long fontScale = 64;
+    long fontScale = 16;
 
     Q_ASSERT(FT_Init_FreeType(&m_library) == 0);
     Q_ASSERT(FT_New_Face(m_library, m_font.toUtf8().data(), 0, &m_face) == 0);
