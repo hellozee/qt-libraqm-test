@@ -27,7 +27,7 @@ public:
 private:
     QString m_font, m_text;
     raqm_direction_t m_direction = RAQM_DIRECTION_LTR;
-    const char *m_language = "hi";
+    const char *m_language = "en";
     FT_Face m_face;
     FT_Library m_library;
     raqm_t *m_rq;

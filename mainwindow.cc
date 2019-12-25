@@ -34,11 +34,11 @@ void MainWindow::on_doneBtn_clicked()
 {
     QString text = ui->textBox->text();
 
-        if(text.isEmpty() || m_fontLocation.isEmpty())
+    if(text.isEmpty() || m_fontLocation.isEmpty())
             return;
 
     m_layoutEngine.setText(text);
-    PaintWidget *p = qobject_cast<PaintWidget *>(ui->canvas);
+    auto *p = qobject_cast<PaintWidget *>(ui->canvas);
     p->setProperties(m_layoutEngine.calculate());
     p->update();
 }

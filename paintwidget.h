@@ -17,7 +17,6 @@ private:
     qreal m_margin, m_scale, m_displacement;
     QRawFont m_font;
     bool m_propertiesSet;
-    int count = 0;
 };
 
 #endif // PAINTWIDGET_H

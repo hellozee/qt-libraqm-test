@@ -14,7 +14,7 @@ PropertyHolder LayoutEngine::calculate()
 
     Q_ASSERT(FT_Init_FreeType(&m_library) == 0);
     Q_ASSERT(FT_New_Face(m_library, m_font.toUtf8().data(), 0, &m_face) == 0);
-    Q_ASSERT(FT_Set_Char_Size(m_face, m_fontSize, 0, 0, 0) == 0) ;
+    Q_ASSERT(FT_Set_Char_Size(m_face, m_fontSize*64, 0, 0, 0) == 0) ;
 
     m_rq = raqm_create();
     Q_ASSERT(m_rq);
@@ -39,7 +39,7 @@ PropertyHolder LayoutEngine::calculate()
     qreal x = 0.0, y = 0.0;
     for(int i=0; i<static_cast<int>(count); i++) {
         glyphIndexes[i] = glyphs[i].index;
-        glyphPositions[i] = QPointF(x + glyphs[i].x_offset, y - glyphs[i].y_offset);
+        glyphPositions[i] = QPointF(x + glyphs[i].x_offset, y - glyphs[i].y_offset)/64;
         x += glyphs[i].x_advance;
         y -= glyphs[i].y_advance;
     }
