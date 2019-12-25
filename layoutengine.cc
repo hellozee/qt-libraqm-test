@@ -38,9 +38,12 @@ PropertyHolder LayoutEngine::calculate()
 
     qreal x = 0.0, y = 0.0;
     for(int i=0; i<static_cast<int>(count); i++) {
+        if(glyphs[i].index == FT_Get_Char_Index(glyphs[i].ftface, ' ')){
+            x += m_wordSpacing * 50;
+        }
         glyphIndexes[i] = glyphs[i].index;
         glyphPositions[i] = QPointF(x + glyphs[i].x_offset, y - glyphs[i].y_offset)/64;
-        x += glyphs[i].x_advance;
+        x += glyphs[i].x_advance + m_letterSpacing * 50;
         y -= glyphs[i].y_advance;
     }
 

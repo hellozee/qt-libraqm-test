@@ -25,6 +25,8 @@ public:
     inline void setFontFace(QString font) { m_font = font; }
     inline void setText(QString text) { m_text = text; }
     inline void setFontSize(int size) { m_fontSize = size; }
+    inline void setLetterSpacing(qreal spacing) { m_letterSpacing = spacing; }
+    inline void setWordSpacing(qreal spacing) { m_wordSpacing = spacing; }
     PropertyHolder calculate();
 
 private:
@@ -35,6 +37,7 @@ private:
     FT_Face m_face;
     FT_Library m_library;
     int m_fontSize;
+    qreal m_letterSpacing, m_wordSpacing;
 };
 
 #endif // LAYOUTENGINE_H

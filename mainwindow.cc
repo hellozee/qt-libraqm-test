@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     m_layoutEngine.setFontSize(ui->fontSize->value());
     m_lineHeight = ui->lineHeight->value();
+    m_layoutEngine.setLetterSpacing(ui->letterSpacing->value());
+    m_layoutEngine.setWordSpacing(ui->wordSpacing->value());
 }
 
 MainWindow::~MainWindow()
@@ -52,8 +54,8 @@ void MainWindow::recalliberate()
 {
     QVector<PropertyHolder>props;
 
-    for(int i=0; i<m_input.count(); i++) {
-        m_layoutEngine.setText(m_input.at(i));
+    foreach(QString str, m_input) {
+        m_layoutEngine.setText(str);
         auto p = m_layoutEngine.calculate();
         props.push_back(p);
     }
@@ -65,8 +67,20 @@ void MainWindow::recalliberate()
     widget->updateWidget(props, m_lineHeight);
 }
 
-void MainWindow::on_lineHeight_valueChanged(int arg1)
+void MainWindow::on_lineHeight_valueChanged(qreal arg1)
 {
     m_lineHeight = arg1;
+    recalliberate();
+}
+
+void MainWindow::on_wordSpacing_valueChanged(qreal arg1)
+{
+    m_layoutEngine.setWordSpacing(arg1);
+    recalliberate();
+}
+
+void MainWindow::on_letterSpacing_valueChanged(qreal arg1)
+{
+    m_layoutEngine.setLetterSpacing(arg1);
     recalliberate();
 }
