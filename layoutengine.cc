@@ -9,8 +9,8 @@ LayoutEngine::~LayoutEngine()
 
 PropertyHolder LayoutEngine::calculate()
 {
-    qreal margin = m_fontSize * 0.5;
-    long fontScale = 16;
+    if(m_font.isEmpty() || m_fontSize == 0 || m_text.isEmpty())
+        return PropertyHolder{};
 
     Q_ASSERT(FT_Init_FreeType(&m_library) == 0);
     Q_ASSERT(FT_New_Face(m_library, m_font.toUtf8().data(), 0, &m_face) == 0);
@@ -54,7 +54,5 @@ PropertyHolder LayoutEngine::calculate()
     PropertyHolder p;
     p.glyph = glyphRun;
     p.font = rawFont;
-    p.margin = margin;
-    p.scale = fontScale;
     return p;
 }

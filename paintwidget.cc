@@ -3,27 +3,29 @@
 #include <QPaintEvent>
 
 PaintWidget::PaintWidget(QWidget *parent):
-    QWidget(parent), m_propertiesSet(false)
+    QWidget(parent)
 { }
 
-void PaintWidget::paintEvent(QPaintEvent *e)
+void PaintWidget::paintEvent(QPaintEvent *event)
 {
-    if(!m_propertiesSet){
-        QWidget::paintEvent(e);
+    if(m_props.isEmpty()){
+        QWidget::paintEvent(event);
         return;
     }
 
-    QPainter painter(this);
-    Q_ASSERT(m_font.isValid());
-    painter.drawGlyphRun(QPointF(m_margin, m_font.ascent() + m_margin), m_glyphRun);
+    QPainter gc(this);
+    auto ascent = m_props[0].font.ascent();
+    auto descent = m_props[0].font.descent();
+    qreal displacement = ascent;
+    for(int i=0; i<m_props.count(); i++){
+        gc.drawGlyphRun(QPointF(0.5, displacement + 0.5), m_props[i].glyph);
+        displacement += ascent + descent + m_lineHeight;
+    }
 }
 
-void PaintWidget::setProperties(PropertyHolder p)
+void PaintWidget::updateWidget(QVector<PropertyHolder> props, qreal lineHeight)
 {
-    m_glyphRun = p.glyph;
-    m_margin = p.margin;
-    m_scale = p.scale;
-    m_font = p.font;
-    m_displacement = p.displacement;
-    m_propertiesSet = true;
+    m_props = props;
+    m_lineHeight = lineHeight;
+    this->update();
 }

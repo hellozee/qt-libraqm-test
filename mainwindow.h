@@ -16,13 +16,19 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void recalliberate();
+
 private slots:
-    void on_doneBtn_clicked();
+    void on_lineHeight_valueChanged(int arg1);
+    void on_fontSize_valueChanged(int arg1);
+    void on_plainTextEdit_textChanged();
+    void on_fontChooser_clicked();
 
 private:
     Ui::MainWindow *ui;
-    QString m_fontLocation;
     LayoutEngine m_layoutEngine;
+    QStringList m_input;
+    qreal m_lineHeight;
 };
 
 #endif // MAINWINDOW_H
