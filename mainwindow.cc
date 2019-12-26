@@ -14,6 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     m_lineHeight = ui->lineHeight->value();
     m_layoutEngine.setLetterSpacing(ui->letterSpacing->value());
     m_layoutEngine.setWordSpacing(ui->wordSpacing->value());
+
+    auto cmb = ui->alignmentBox;
+    cmb->addItems(QStringList{"Left", "Center", "Right"});
+    cmb->setCurrentIndex(m_alignment);
 }
 
 MainWindow::~MainWindow()
@@ -64,7 +68,7 @@ void MainWindow::recalliberate()
         return;
 
     auto widget = qobject_cast<PaintWidget*>(ui->canvas);
-    widget->updateWidget(props, m_lineHeight);
+    widget->updateWidget(props, m_lineHeight, m_alignment);
 }
 
 void MainWindow::on_lineHeight_valueChanged(qreal arg1)
@@ -82,5 +86,11 @@ void MainWindow::on_wordSpacing_valueChanged(qreal arg1)
 void MainWindow::on_letterSpacing_valueChanged(qreal arg1)
 {
     m_layoutEngine.setLetterSpacing(arg1);
+    recalliberate();
+}
+
+void MainWindow::on_alignmentBox_activated(int index)
+{
+    m_alignment = index;
     recalliberate();
 }

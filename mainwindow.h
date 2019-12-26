@@ -19,6 +19,7 @@ public:
     void recalliberate();
 
 private slots:
+    void on_alignmentBox_activated(int index);
     void on_letterSpacing_valueChanged(qreal arg1);
     void on_wordSpacing_valueChanged(qreal arg1);
     void on_lineHeight_valueChanged(qreal arg1);
@@ -31,6 +32,7 @@ private:
     LayoutEngine m_layoutEngine;
     QList<QString> m_input;
     qreal m_lineHeight, m_wordSpacing;
+    int m_alignment = 0;
 };
 
 #endif // MAINWINDOW_H
