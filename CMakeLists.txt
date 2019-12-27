@@ -24,6 +24,7 @@ if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     endif()
 endif()
 
+set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON) # Automatically MOC source files
 
 if(NOT CMAKE_VERSION VERSION_LESS 3.0)
@@ -36,10 +37,11 @@ find_package(Qt5Gui REQUIRED)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(RAQM REQUIRED IMPORTED_TARGET raqm)
+pkg_check_modules(FC REQUIRED IMPORTED_TARGET fontconfig)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${RAQM_INCLUDE_DIRS})
 include_directories(external/svgpp/include/ external/svgpp/third_party/)
-set(SOURCES main.cc mainwindow.cc paintwidget.cc layoutengine.cc mainwindow.ui)
+set(SOURCES main.cc mainwindow.cc paintwidget.cc layoutengine.cc betterfontcb.cpp mainwindow.ui)
 
-add_executable( ${PROJECT_NAME} ${SOURCES})
-target_link_libraries( ${PROJECT_NAME} Qt5::Core Qt5::Widgets Qt5::Gui ${RAQM_LIBRARIES})
+add_executable(${PROJECT_NAME} ${SOURCES})
+target_link_libraries( ${PROJECT_NAME} Qt5::Core Qt5::Widgets Qt5::Gui ${RAQM_LIBRARIES} ${FC_LIBRARIES})

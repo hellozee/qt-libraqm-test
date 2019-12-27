@@ -18,11 +18,7 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QPushButton" name="fontChooser">
-        <property name="text">
-         <string>Choose Font</string>
-        </property>
-       </widget>
+       <widget class="BetterFontCB" name="fontCB"/>
       </item>
       <item>
        <widget class="QComboBox" name="alignmentBox">
@@ -105,11 +101,10 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPlainTextEdit" name="plainTextEdit"/>
-      </item>
-     </layout>
+     <layout class="QHBoxLayout" name="horizontalLayout"/>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="plainTextEdit"/>
     </item>
     <item>
      <widget class="PaintWidget" name="canvas" native="true">
@@ -130,6 +125,11 @@
    <extends>QWidget</extends>
    <header>paintwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BetterFontCB</class>
+   <extends>QComboBox</extends>
+   <header>betterfontcb.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

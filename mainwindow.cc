@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include "paintwidget.h"
+#include "betterfontcb.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,20 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::on_fontChooser_clicked()
-{
-    QString fontLocation = QFileDialog::getOpenFileName(
-                    this, ("Choose Font"),
-                    QStandardPaths::standardLocations(QStandardPaths::FontsLocation)[1],
-                    ("Fonts (*.ttf *.otf)"));
-
-    if(!fontLocation.isEmpty())
-            ui->fontChooser->setText(QFileInfo(fontLocation).fileName());
-
-    m_layoutEngine.setFontFace(fontLocation);
-    recalliberate();
 }
 
 void MainWindow::on_plainTextEdit_textChanged()
@@ -92,5 +79,13 @@ void MainWindow::on_letterSpacing_valueChanged(qreal arg1)
 void MainWindow::on_alignmentBox_activated(int index)
 {
     m_alignment = index;
+    recalliberate();
+}
+
+void MainWindow::on_fontCB_activated(int index)
+{
+    auto widget = qobject_cast<BetterFontCB*>(ui->fontCB);
+    auto fontFile = widget->getFile(index);
+    m_layoutEngine.setFontFace(fontFile);
     recalliberate();
 }
