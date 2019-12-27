@@ -19,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent) :
     auto cmb = ui->alignmentBox;
     cmb->addItems(QStringList{"Left", "Center", "Right"});
     cmb->setCurrentIndex(m_alignment);
+
+    auto widget = qobject_cast<BetterFontCB*>(ui->fontCB);
+    m_layoutEngine.setFontFace(widget->getFile(widget->currentIndex()));
+
+    m_layoutEngine.setDirection(ui->textDirection->isChecked());
 }
 
 MainWindow::~MainWindow()
@@ -87,5 +92,11 @@ void MainWindow::on_fontCB_activated(int index)
     auto widget = qobject_cast<BetterFontCB*>(ui->fontCB);
     auto fontFile = widget->getFile(index);
     m_layoutEngine.setFontFace(fontFile);
+    recalliberate();
+}
+
+void MainWindow::on_textDirection_toggled(bool checked)
+{
+    m_layoutEngine.setDirection(checked);
     recalliberate();
 }

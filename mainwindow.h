@@ -19,6 +19,9 @@ public:
     void recalliberate();
 
 private slots:
+    void on_textDirection_toggled(bool checked);
+
+private slots:
     void on_fontCB_activated(int index);
     void on_alignmentBox_activated(int index);
     void on_letterSpacing_valueChanged(qreal arg1);

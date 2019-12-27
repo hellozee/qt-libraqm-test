@@ -36,12 +36,15 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(PkgConfig REQUIRED)
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
 pkg_check_modules(RAQM REQUIRED IMPORTED_TARGET raqm)
 pkg_check_modules(FC REQUIRED IMPORTED_TARGET fontconfig)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${RAQM_INCLUDE_DIRS})
 include_directories(external/svgpp/include/ external/svgpp/third_party/)
-set(SOURCES main.cc mainwindow.cc paintwidget.cc layoutengine.cc betterfontcb.cpp mainwindow.ui)
+set(SOURCES main.cc mainwindow.cc paintwidget.cc layoutengine.cc betterfontcb.cpp mainwindow.ui resources/icons.qrc)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries( ${PROJECT_NAME} Qt5::Core Qt5::Widgets Qt5::Gui ${RAQM_LIBRARIES} ${FC_LIBRARIES})

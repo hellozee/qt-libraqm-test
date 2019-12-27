@@ -9,18 +9,22 @@ PaintWidget::PaintWidget(QWidget *parent):
 
 void PaintWidget::paintEvent(QPaintEvent *event)
 {
+    QPainter gc(this);
+    gc.fillRect(event->rect(), Qt::white);
+
     if(m_props.isEmpty()){
         QWidget::paintEvent(event);
         return;
     }
 
-    QPainter gc(this);
+    gc.setPen(Qt::black);
+
     auto ascent = m_props[0].font.ascent();
     auto descent = m_props[0].font.descent();
     qreal displacement = ascent;
 
     for(int i=0; i<m_props.count(); i++){
-        qreal alignment = 0.5;
+        qreal alignment = 1;
         auto glyphWidth = m_props[i].glyph.boundingRect().width();
         auto canvasWidth = event->rect().width();
 
@@ -31,12 +35,12 @@ void PaintWidget::paintEvent(QPaintEvent *event)
             break;
         }
         case 2 :
-            alignment = canvasWidth - glyphWidth - 0.5;
+            alignment = canvasWidth - glyphWidth - 1;
             break;
         default: break;
         }
 
-        gc.drawGlyphRun(QPointF(alignment, displacement + 0.5), m_props[i].glyph);
+        gc.drawGlyphRun(QPointF(alignment, displacement + 1), m_props[i].glyph);
         displacement += ascent + descent + m_lineHeight;
     }
 }
