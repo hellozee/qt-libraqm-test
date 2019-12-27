@@ -1,4 +1,5 @@
 #include "layoutengine.h"
+#include <QDebug>
 
 LayoutEngine::~LayoutEngine()
 {
@@ -19,10 +20,10 @@ PropertyHolder LayoutEngine::calculate()
     m_rq = raqm_create();
     Q_ASSERT(m_rq);
 
-    Q_ASSERT(raqm_set_text_utf8 (m_rq, m_text.toUtf8().data(), static_cast<size_t>(m_text.length())));
+    raqm_set_text_utf8 (m_rq, m_text.toUtf8().data(), m_text.toUtf8().size());
     Q_ASSERT(raqm_set_freetype_face (m_rq, m_face));
     Q_ASSERT(raqm_set_par_direction (m_rq, m_direction));
-    Q_ASSERT(raqm_set_language (m_rq, m_language, 0, strlen (m_text.toUtf8().data())));
+    Q_ASSERT(raqm_set_language (m_rq, m_language, 0, m_text.length()));
     Q_ASSERT(raqm_layout (m_rq));
 
     size_t count;
@@ -43,7 +44,7 @@ PropertyHolder LayoutEngine::calculate()
         }
         glyphIndexes[i] = glyphs[i].index;
         glyphPositions[i] = QPointF(x + glyphs[i].x_offset, y - glyphs[i].y_offset)/64;
-        x += glyphs[i].x_advance + m_letterSpacing * 50;
+        x += glyphs[i].x_advance + (m_letterSpacing-1) * 50;
         y -= glyphs[i].y_advance;
     }
 
