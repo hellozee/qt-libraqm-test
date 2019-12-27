@@ -161,6 +161,19 @@ QRadioButton::indicator{
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="colorBtn">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="textDirection">
         <property name="text">
          <string/>

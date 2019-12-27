@@ -17,7 +17,7 @@ void PaintWidget::paintEvent(QPaintEvent *event)
         return;
     }
 
-    gc.setPen(Qt::black);
+    gc.setPen(m_textColor);
 
     auto ascent = m_props[0].font.ascent();
     auto descent = m_props[0].font.descent();
@@ -45,10 +45,11 @@ void PaintWidget::paintEvent(QPaintEvent *event)
     }
 }
 
-void PaintWidget::updateWidget(QVector<PropertyHolder> props, qreal lineHeight, int align)
+void PaintWidget::updateWidget(QVector<PropertyHolder> props, qreal lineHeight, int align, QColor col)
 {
     m_props = props;
     m_lineHeight = lineHeight;
     m_align = align;
+    m_textColor = col;
     this->update();
 }

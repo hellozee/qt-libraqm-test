@@ -1,8 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QFileDialog>
-#include <QStandardPaths>
+#include <QColorDialog>
 #include "paintwidget.h"
 #include "betterfontcb.h"
 
@@ -23,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_layoutEngine.setFontFace(widget->getFile(widget->currentIndex()));
 
     m_layoutEngine.setDirection(ui->textDirection->isChecked());
+
+    m_textColor = Qt::black;
+    ui->colorBtn->setStyleSheet("QPushButton{background:"+ m_textColor.name() +"}");
 }
 
 MainWindow::~MainWindow()
@@ -59,7 +61,7 @@ void MainWindow::recalliberate()
         return;
 
     auto widget = qobject_cast<PaintWidget*>(ui->canvas);
-    widget->updateWidget(props, m_lineHeight, m_alignment);
+    widget->updateWidget(props, m_lineHeight, m_alignment, m_textColor);
 }
 
 void MainWindow::on_lineHeight_valueChanged(qreal arg1)
@@ -116,4 +118,13 @@ void MainWindow::on_rightAlign_toggled(bool checked)
         m_alignment = 2;
         recalliberate();
     }
+}
+
+void MainWindow::on_colorBtn_clicked()
+{
+    auto clr = new QColorDialog(this);
+    clr->exec();
+    m_textColor = clr->selectedColor();
+    ui->colorBtn->setStyleSheet("QPushButton{background:"+ m_textColor.name() +"}");
+    recalliberate();
 }

@@ -19,6 +19,9 @@ public:
     void recalliberate();
 
 private slots:
+    void on_colorBtn_clicked();
+
+private slots:
     void on_rightAlign_toggled(bool checked);
     void on_centerAlign_toggled(bool checked);
     void on_leftAlign_toggled(bool checked);
@@ -36,6 +39,7 @@ private:
     QList<QString> m_input;
     qreal m_lineHeight, m_wordSpacing;
     int m_alignment = 0;
+    QColor m_textColor;
 };
 
 #endif // MAINWINDOW_H
