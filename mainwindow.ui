@@ -14,21 +14,21 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">QRadioButton::indicator::checked{
+	background: #222;
+}
+
+QRadioButton::indicator{
+	border-radius: 2px;
+	padding: 5px;
+}</string>
+   </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="BetterFontCB" name="fontCB"/>
-      </item>
-      <item>
-       <widget class="QComboBox" name="alignmentBox">
-        <property name="currentText">
-         <string/>
-        </property>
-        <property name="maxVisibleItems">
-         <number>3</number>
-        </property>
-       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_3">
@@ -106,6 +106,48 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
+       <widget class="QRadioButton" name="leftAlign">
+        <property name="styleSheet">
+         <string notr="true">QRadioButton::indicator {
+    width: 24px;
+    height: 24px;
+	image: url(:/icons/left-align.svg);
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="centerAlign">
+        <property name="styleSheet">
+         <string notr="true">QRadioButton::indicator {
+    width: 24px;
+    height: 24px;
+	image: url(:/icons/center-align.svg);
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rightAlign">
+        <property name="styleSheet">
+         <string notr="true">QRadioButton::indicator {
+    width: 24px;
+    height: 24px;
+	image: url(:/icons/right-align.svg);
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -126,6 +168,12 @@
         <property name="icon">
          <iconset resource="resources/icons.qrc">
           <normaloff>:/icons/text-direction.svg</normaloff>:/icons/text-direction.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
         </property>
         <property name="checkable">
          <bool>true</bool>

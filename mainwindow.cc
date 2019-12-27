@@ -16,9 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_layoutEngine.setLetterSpacing(ui->letterSpacing->value());
     m_layoutEngine.setWordSpacing(ui->wordSpacing->value());
 
-    auto cmb = ui->alignmentBox;
-    cmb->addItems(QStringList{"Left", "Center", "Right"});
-    cmb->setCurrentIndex(m_alignment);
+    m_alignment = 0;
+    ui->leftAlign->setChecked(true);
 
     auto widget = qobject_cast<BetterFontCB*>(ui->fontCB);
     m_layoutEngine.setFontFace(widget->getFile(widget->currentIndex()));
@@ -81,12 +80,6 @@ void MainWindow::on_letterSpacing_valueChanged(qreal arg1)
     recalliberate();
 }
 
-void MainWindow::on_alignmentBox_activated(int index)
-{
-    m_alignment = index;
-    recalliberate();
-}
-
 void MainWindow::on_fontCB_activated(int index)
 {
     auto widget = qobject_cast<BetterFontCB*>(ui->fontCB);
@@ -99,4 +92,28 @@ void MainWindow::on_textDirection_toggled(bool checked)
 {
     m_layoutEngine.setDirection(checked);
     recalliberate();
+}
+
+void MainWindow::on_leftAlign_toggled(bool checked)
+{
+    if(checked){
+        m_alignment = 0;
+        recalliberate();
+    }
+}
+
+void MainWindow::on_centerAlign_toggled(bool checked)
+{
+    if(checked){
+        m_alignment = 1;
+        recalliberate();
+    }
+}
+
+void MainWindow::on_rightAlign_toggled(bool checked)
+{
+    if(checked){
+        m_alignment = 2;
+        recalliberate();
+    }
 }

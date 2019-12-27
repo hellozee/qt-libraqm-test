@@ -19,11 +19,11 @@ public:
     void recalliberate();
 
 private slots:
+    void on_rightAlign_toggled(bool checked);
+    void on_centerAlign_toggled(bool checked);
+    void on_leftAlign_toggled(bool checked);
     void on_textDirection_toggled(bool checked);
-
-private slots:
     void on_fontCB_activated(int index);
-    void on_alignmentBox_activated(int index);
     void on_letterSpacing_valueChanged(qreal arg1);
     void on_wordSpacing_valueChanged(qreal arg1);
     void on_lineHeight_valueChanged(qreal arg1);
