@@ -20,10 +20,10 @@ PropertyHolder LayoutEngine::calculate()
     m_rq = raqm_create();
     Q_ASSERT(m_rq);
 
-    raqm_set_text_utf8 (m_rq, m_text.toUtf8().data(), m_text.toUtf8().size());
+    raqm_set_text_utf8 (m_rq, m_text.toUtf8().data(), static_cast<size_t>(m_text.toUtf8().size()));
     Q_ASSERT(raqm_set_freetype_face (m_rq, m_face));
     Q_ASSERT(raqm_set_par_direction (m_rq, m_direction));
-    Q_ASSERT(raqm_set_language (m_rq, m_language, 0, m_text.length()));
+    Q_ASSERT(raqm_set_language (m_rq, m_language, 0, static_cast<size_t>(m_text.toUtf8().size())));
     Q_ASSERT(raqm_layout (m_rq));
 
     size_t count;
