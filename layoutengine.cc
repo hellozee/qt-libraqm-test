@@ -42,11 +42,11 @@ PropertyHolder LayoutEngine::calculate()
     qreal x = 0.0, y = 0.0;
     for(int i=0; i<static_cast<int>(count); i++) {
         if(charBytes[glyphs[i].cluster] == ' '){
-            x += m_wordSpacing;
+            x += m_wordSpacing * 64;
         }
         glyphIndexes[i] = glyphs[i].index;
-        glyphPositions[i] = QPointF(x + (glyphs[i].x_offset) * 64, y - glyphs[i].y_offset * 64)/64;
-        x += glyphs[i].x_advance + (m_letterSpacing-1);
+        glyphPositions[i] = QPointF(x + glyphs[i].x_offset, y - glyphs[i].y_offset)/64;
+        x += glyphs[i].x_advance + (m_letterSpacing-1) * 64;
         y -= glyphs[i].y_advance;
     }
 
