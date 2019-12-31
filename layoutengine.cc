@@ -20,10 +20,12 @@ PropertyHolder LayoutEngine::calculate()
     m_rq = raqm_create();
     Q_ASSERT(m_rq);
 
-    raqm_set_text_utf8 (m_rq, m_text.toUtf8().data(), static_cast<size_t>(m_text.toUtf8().size()));
+    auto charBytes = m_text.toUtf8();
+
+    raqm_set_text_utf8 (m_rq, charBytes, static_cast<size_t>(charBytes.size()));
     Q_ASSERT(raqm_set_freetype_face (m_rq, m_face));
     Q_ASSERT(raqm_set_par_direction (m_rq, m_direction));
-    Q_ASSERT(raqm_set_language (m_rq, m_language, 0, static_cast<size_t>(m_text.toUtf8().size())));
+    Q_ASSERT(raqm_set_language (m_rq, m_language, 0, static_cast<size_t>(charBytes.size())));
     Q_ASSERT(raqm_layout (m_rq));
 
     size_t count;
@@ -39,12 +41,12 @@ PropertyHolder LayoutEngine::calculate()
 
     qreal x = 0.0, y = 0.0;
     for(int i=0; i<static_cast<int>(count); i++) {
-        if(glyphs[i].index == FT_Get_Char_Index(glyphs[i].ftface, ' ')){
-            x += m_wordSpacing * 50;
+        if(charBytes[glyphs[i].cluster] == ' '){
+            x += m_wordSpacing;
         }
         glyphIndexes[i] = glyphs[i].index;
-        glyphPositions[i] = QPointF(x + glyphs[i].x_offset, y - glyphs[i].y_offset)/64;
-        x += glyphs[i].x_advance + (m_letterSpacing-1) * 50;
+        glyphPositions[i] = QPointF(x + (glyphs[i].x_offset) * 64, y - glyphs[i].y_offset * 64)/64;
+        x += glyphs[i].x_advance + (m_letterSpacing-1);
         y -= glyphs[i].y_advance;
     }
 
