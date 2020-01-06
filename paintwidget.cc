@@ -8,9 +8,8 @@ PaintWidget::PaintWidget(QWidget *parent):
     QWidget(parent)
 {
     m_handleRects.resize(4);
-    m_timer.start(500);
     connect(&m_timer, &QTimer::timeout, this, &PaintWidget::blinkIBar);
-    setFocusPolicy(Qt::ClickFocus);
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 void PaintWidget::paintEvent(QPaintEvent *event)
@@ -27,39 +26,45 @@ void PaintWidget::paintEvent(QPaintEvent *event)
 
     auto ascent = m_props[0].font.ascent();
     auto descent = m_props[0].font.descent();
-    qreal displacement = ascent, maxWidth = 0, lastWidth = 0;
+    qreal maxHeight = 0, maxWidth = 0, lastWidth = 0, displacement = 0;
 
-    for(int i=0;i<m_props.count(); i++){
-        auto glyphWidth = m_props[i].glyph.boundingRect().width();
-        if(maxWidth < glyphWidth)
-            maxWidth = glyphWidth;
-        lastWidth = glyphWidth;
-    }
+    if(m_layoutEngine.direction() == RAQM_DIRECTION_TTB){
+        qreal width = m_props[0].glyph.boundingRect().width()/2;
+        for(int i=0; i<m_props.count(); i++){
+            gc.drawGlyphRun(m_topLeft + QPointF(displacement + lastWidth, 0), m_props[i].glyph);
 
-    for(int i=0; i<m_props.count(); i++){
-        qreal alignment = 1;
-        auto canvasWidth = maxWidth;
-        auto glyphWidth = m_props[i].glyph.boundingRect().width();
+            auto rect = m_props[i].glyph.boundingRect();
 
-        switch(m_align){
-        case 0 : break;
-        case 1 :{
-            alignment = (canvasWidth - glyphWidth)/2;
-            break;
-        }
-        case 2 :
-            alignment = canvasWidth - glyphWidth - 1;
-            break;
-        default: break;
+            if(maxWidth < rect.width())
+                maxWidth = rect.width();
+
+            if(maxHeight < rect.height())
+                maxHeight = rect.height();
+
+            lastWidth = rect.width();
+
+            displacement += rect.width() + m_lineHeight + 1.0;
         }
 
-        gc.drawGlyphRun(QPointF(alignment, displacement + 1) + m_topLeft, m_props[i].glyph);
-        displacement += ascent + descent + m_lineHeight;
+        m_boundingRect = QRect(m_topLeft - QPoint(width, 0), QSize(displacement + lastWidth/2, maxHeight + descent));
+    }else{
+        for(int i=0; i<m_props.count(); i++){
+            gc.drawGlyphRun(m_topLeft + QPointF(0, ascent + displacement), m_props[i].glyph);
+            displacement += ascent + descent + m_lineHeight;
+
+            auto rect = m_props[i].glyph.boundingRect();
+
+            if(maxWidth < rect.width())
+                maxWidth = rect.width();
+
+            if(maxHeight < rect.height())
+                maxHeight = rect.height();
+
+            lastWidth = rect.width();
+        }
+
+        m_boundingRect = QRect(m_topLeft, QSize(maxWidth, displacement - m_lineHeight));
     }
-
-    displacement = displacement - (ascent + m_lineHeight) + 1;
-
-    m_boundingRect = QRect(QPoint(m_topLeft - QPoint(-1, 0)), QSize(maxWidth+2, displacement));
 
     drawHandles(gc);
     drawIbar(gc, lastWidth);
@@ -68,18 +73,20 @@ void PaintWidget::paintEvent(QPaintEvent *event)
 void PaintWidget::drawIbar(QPainter &gc, qreal distanceFromLeft)
 {
     if(m_insertMode && m_blinkCounter % 2){
-        QPoint pos = m_lastCursorPos;
-
-        if(m_boundingRect.size() != QSize(0, 0)){
-            pos = m_boundingRect.bottomLeft() + QPoint(distanceFromLeft + 3, 0);
-        }
-
         int size = 20;
         if(m_props.size() != 0){
             size = m_props[0].font.pixelSize();
         }
 
-        gc.fillRect(QRect(pos - QPoint(0, size), QSize(1, size)), Qt::black);
+        QPoint pos = m_lastCursorPos;
+
+        if(m_boundingRect.size() != QSize(0, 0)){
+            pos = m_boundingRect.bottomLeft() + QPoint(distanceFromLeft + 3, 0);
+            gc.fillRect(QRect(pos - QPoint(0, size), QSize(1, size)), Qt::black);
+        }else{
+            gc.fillRect(QRect(pos, QSize(1, size)), Qt::black);
+        }
+
         m_blinkCounter = 1;
     }
 }
@@ -106,14 +113,15 @@ void PaintWidget::mousePressEvent(QMouseEvent *event)
     m_insertMode = true;
     m_lastCursorPos = event->pos();
     m_topLeft = m_lastCursorPos;
-    update();
+    m_timer.start(500);
+    this->update();
 }
 
 void PaintWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if(m_moveIt){
         m_topLeft = event->pos() - m_lastCursorPos;
-        update();
+        this->update();
     }
 
     if(m_handleSelected){
@@ -139,7 +147,7 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *event)
             }
         }
 
-        update();
+        this->update();
     }
 }
 
@@ -156,7 +164,7 @@ void PaintWidget::drawHandles(QPainter &gc)
 
     QRect handleBox(QPoint(), QSize(5,5));
 
-    handleBox.moveCenter(m_topLeft);
+    handleBox.moveCenter(m_boundingRect.topLeft());
     gc.fillRect(handleBox, Qt::black);
 
     m_handleRects[0] = handleBox;
@@ -200,7 +208,7 @@ void PaintWidget::keyPressEvent(QKeyEvent *event)
         text = "\n";
 
     if(text == "\b"){
-        m_totalInput.resize(m_input.length() - 1);
+        m_totalInput.resize(m_totalInput.length() - 1);
     }else{
         m_totalInput += text;
     }
