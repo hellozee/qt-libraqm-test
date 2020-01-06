@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "layoutengine.h"
+#include "paintwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -16,12 +16,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void recalliberate();
-
 private slots:
     void on_colorBtn_clicked();
-
-private slots:
     void on_rightAlign_toggled(bool checked);
     void on_centerAlign_toggled(bool checked);
     void on_leftAlign_toggled(bool checked);
@@ -31,16 +27,11 @@ private slots:
     void on_wordSpacing_valueChanged(qreal arg1);
     void on_lineHeight_valueChanged(qreal arg1);
     void on_fontSize_valueChanged(int arg1);
-    void on_textScaled(qreal ratio);
-    void on_textEntered(QString text);
 
 private:
     Ui::MainWindow *ui;
-    LayoutEngine m_layoutEngine;
-    QList<QString> m_input;
-    qreal m_lineHeight, m_wordSpacing;
-    int m_alignment = 0;
-    QColor m_textColor;
+    PaintWidget *canvas;
+
 };
 
 #endif // MAINWINDOW_H

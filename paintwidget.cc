@@ -84,15 +84,6 @@ void PaintWidget::drawIbar(QPainter &gc, qreal distanceFromLeft)
     }
 }
 
-void PaintWidget::updateWidget(QVector<PropertyHolder> props, qreal lineHeight, int align, QColor col)
-{
-    m_props = props;
-    m_lineHeight = lineHeight;
-    m_align = align;
-    m_textColor = col;
-    this->update();
-}
-
 void PaintWidget::mousePressEvent(QMouseEvent *event)
 {
     if(event->button() != Qt::LeftButton)
@@ -126,7 +117,6 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *event)
     }
 
     if(m_handleSelected){
-        auto oldSize = m_boundingRect.size();
         switch (m_handle) {
             case TopLeft:{
                 m_boundingRect.setTopLeft(event->pos());
@@ -210,11 +200,77 @@ void PaintWidget::keyPressEvent(QKeyEvent *event)
         text = "\n";
 
     if(text == "\b"){
-        m_input.resize(m_input.length() - 1);
+        m_totalInput.resize(m_input.length() - 1);
     }else{
-        m_input += text;
+        m_totalInput += text;
     }
 
-    emit textEntered(m_input);
+    m_input = m_totalInput.split("\n");
+
+    recalliberate();
+}
+
+void PaintWidget::recalliberate()
+{
+    QVector<PropertyHolder>props;
+
+    foreach(QString str, m_input) {
+        m_layoutEngine.setText(str);
+        auto p = m_layoutEngine.calculate();
+        props.push_back(p);
+    }
+
+    if(props.isEmpty())
+        return;
+
+    m_props = props;
     this->update();
+}
+
+void PaintWidget::setFontSize(int size)
+{
+    m_layoutEngine.setFontSize(size);
+    recalliberate();
+}
+
+void PaintWidget::setTextColor(QColor col)
+{
+    m_textColor = col;
+    recalliberate();
+}
+
+void PaintWidget::setFontFile(QString file)
+{
+    m_layoutEngine.setFontFace(file);
+    recalliberate();
+}
+
+void PaintWidget::setAlignment(int align)
+{
+    m_align = align;
+    recalliberate();
+}
+
+void PaintWidget::setLineHeight(qreal height)
+{
+    m_lineHeight = height;
+    recalliberate();
+}
+
+void PaintWidget::setLetterSpacing(qreal spacing)
+{
+    m_layoutEngine.setLetterSpacing(spacing);
+    recalliberate();
+}
+
+void PaintWidget::setWordSpacing(qreal spacing)
+{
+    m_layoutEngine.setWordSpacing(spacing);
+    recalliberate();
+}
+
+void PaintWidget::setTextDirection(bool dir)
+{
+    m_layoutEngine.setDirection(dir);
+    recalliberate();
 }
