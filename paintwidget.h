@@ -39,7 +39,7 @@ protected:
 
 private:
     void drawHandles(QPainter &gc);
-    void drawIbar(QPainter &gc, qreal distanceFromLeft);
+    void drawIbar(QPainter &gc, QPointF distanceFromLeft);
     void recalliberate();
 
 private Q_SLOTS:

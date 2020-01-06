@@ -27,7 +27,9 @@ public:
     inline void setFontSize(int size) { m_fontSize = size; }
     inline void setLetterSpacing(qreal spacing) { m_letterSpacing = spacing; }
     inline void setWordSpacing(qreal spacing) { m_wordSpacing = spacing; }
+
     inline raqm_direction_t direction() { return m_direction; }
+    inline int fontSize() { return m_fontSize; }
 
     inline void setDirection(bool vertical){
         if(vertical)

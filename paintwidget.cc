@@ -18,7 +18,7 @@ void PaintWidget::paintEvent(QPaintEvent *event)
     gc.fillRect(event->rect(), Qt::white);
 
     if(m_props.isEmpty()){
-        drawIbar(gc, 0);
+        drawIbar(gc, m_topLeft);
         return;
     }
 
@@ -27,6 +27,7 @@ void PaintWidget::paintEvent(QPaintEvent *event)
     auto ascent = m_props[0].font.ascent();
     auto descent = m_props[0].font.descent();
     qreal maxHeight = 0, maxWidth = 0, lastWidth = 0, displacement = 0;
+    auto caretPos = m_props.last().glyph.boundingRect().bottomRight();
 
     if(m_layoutEngine.direction() == RAQM_DIRECTION_TTB){
         qreal width = m_props[0].glyph.boundingRect().width()/2;
@@ -46,6 +47,12 @@ void PaintWidget::paintEvent(QPaintEvent *event)
             displacement += rect.width() + m_lineHeight + 1.0;
         }
 
+        caretPos += QPointF(displacement - m_lineHeight - 1.0 - m_props[0].font.averageCharWidth(), ascent + descent) + m_topLeft;
+
+        if(m_props.size() == 1){
+            caretPos -= QPointF(lastWidth/2, 0);
+        }
+
         m_boundingRect = QRect(m_topLeft - QPoint(width, 0), QSize(displacement + lastWidth/2, maxHeight + descent));
     }else{
         for(int i=0; i<m_props.count(); i++){
@@ -62,29 +69,25 @@ void PaintWidget::paintEvent(QPaintEvent *event)
 
             lastWidth = rect.width();
         }
-
+        caretPos += QPointF(0, displacement - descent) + m_topLeft;
         m_boundingRect = QRect(m_topLeft, QSize(maxWidth, displacement - m_lineHeight));
     }
 
-    drawHandles(gc);
-    drawIbar(gc, lastWidth);
+    //drawHandles(gc);
+    drawIbar(gc, caretPos);
 }
 
-void PaintWidget::drawIbar(QPainter &gc, qreal distanceFromLeft)
+void PaintWidget::drawIbar(QPainter &gc, QPointF bottomPos)
 {
     if(m_insertMode && m_blinkCounter % 2){
-        int size = 20;
-        if(m_props.size() != 0){
-            size = m_props[0].font.pixelSize();
-        }
+        int size = m_layoutEngine.fontSize();
 
-        QPoint pos = m_lastCursorPos;
+        int scaleFactor = size/10;
 
         if(m_boundingRect.size() != QSize(0, 0)){
-            pos = m_boundingRect.bottomLeft() + QPoint(distanceFromLeft + 3, 0);
-            gc.fillRect(QRect(pos - QPoint(0, size), QSize(1, size)), Qt::black);
+            gc.fillRect(QRect(bottomPos.toPoint() - QPoint(0, size + scaleFactor), QSize(1, size + scaleFactor * 2)), Qt::black);
         }else{
-            gc.fillRect(QRect(pos, QSize(1, size)), Qt::black);
+            gc.fillRect(QRect(m_topLeft, QSize(1, size + scaleFactor * 2)), Qt::black);
         }
 
         m_blinkCounter = 1;
