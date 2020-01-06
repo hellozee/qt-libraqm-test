@@ -42,12 +42,22 @@ PropertyHolder LayoutEngine::calculate()
     qreal x = 0.0, y = 0.0;
     for(int i=0; i<static_cast<int>(count); i++) {
         if(charBytes[glyphs[i].cluster] == ' '){
-            x += m_wordSpacing * 64;
+            if(m_direction == RAQM_DIRECTION_TTB)
+                y += m_wordSpacing * 64;
+            else
+                x += m_wordSpacing * 64;
         }
         glyphIndexes[i] = glyphs[i].index;
-        glyphPositions[i] = QPointF(x + glyphs[i].x_offset, y - glyphs[i].y_offset)/64;
-        x += glyphs[i].x_advance + (m_letterSpacing-1) * 64;
-        y -= glyphs[i].y_advance;
+
+        if(m_direction == RAQM_DIRECTION_TTB){
+            glyphPositions[i] = QPointF(x + glyphs[i].x_offset, y - glyphs[i].y_offset)/64;
+            x += glyphs[i].x_advance;
+            y -= glyphs[i].y_advance - (m_letterSpacing-1) * 64;
+        }else{
+            glyphPositions[i] = QPointF(x + glyphs[i].x_offset, y - glyphs[i].y_offset)/64;
+            x += glyphs[i].x_advance + (m_letterSpacing-1) * 64;
+            y -= glyphs[i].y_advance;
+        }
     }
 
 
