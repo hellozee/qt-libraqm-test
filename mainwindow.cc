@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QColorDialog>
+#include <QDebug>
 #include "paintwidget.h"
 #include "betterfontcb.h"
 
@@ -18,13 +19,18 @@ MainWindow::MainWindow(QWidget *parent) :
     m_alignment = 0;
     ui->leftAlign->setChecked(true);
 
-    auto widget = qobject_cast<BetterFontCB*>(ui->fontCB);
-    m_layoutEngine.setFontFace(widget->getFile(widget->currentIndex()));
+    auto fontWidget = qobject_cast<BetterFontCB*>(ui->fontCB);
+    m_layoutEngine.setFontFace(fontWidget->getFile(fontWidget->currentIndex()));
 
     m_layoutEngine.setDirection(ui->textDirection->isChecked());
 
     m_textColor = Qt::black;
     ui->colorBtn->setStyleSheet("QPushButton{background:"+ m_textColor.name() +"}");
+
+    auto paintWidget = qobject_cast<PaintWidget*>(ui->canvas);
+    connect(paintWidget, &PaintWidget::textIsScaled, this, &MainWindow::on_textScaled);
+
+    connect(paintWidget, &PaintWidget::textEntered, this, &MainWindow::on_textEntered);
 }
 
 MainWindow::~MainWindow()
@@ -32,12 +38,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_plainTextEdit_textChanged()
+void MainWindow::on_textEntered(QString text)
 {
-    auto str = ui->plainTextEdit->toPlainText();
-    if(str.isEmpty())
-        return;
-    m_input = str.split("\n");
+    m_input = text.split("\n");
     recalliberate();
 }
 
@@ -127,4 +130,9 @@ void MainWindow::on_colorBtn_clicked()
     m_textColor = clr->selectedColor();
     ui->colorBtn->setStyleSheet("QPushButton{background:"+ m_textColor.name() +"}");
     recalliberate();
+}
+
+void MainWindow::on_textScaled(qreal ratio)
+{
+    ui->fontSize->setValue(ratio * ui->fontSize->value());
 }

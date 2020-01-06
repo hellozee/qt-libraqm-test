@@ -31,7 +31,8 @@ private slots:
     void on_wordSpacing_valueChanged(qreal arg1);
     void on_lineHeight_valueChanged(qreal arg1);
     void on_fontSize_valueChanged(int arg1);
-    void on_plainTextEdit_textChanged();
+    void on_textScaled(qreal ratio);
+    void on_textEntered(QString text);
 
 private:
     Ui::MainWindow *ui;
