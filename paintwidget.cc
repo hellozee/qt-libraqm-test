@@ -30,9 +30,11 @@ void PaintWidget::paintEvent(QPaintEvent *event)
     auto caretPos = m_props.last().glyph.boundingRect().bottomRight();
 
     if(m_layoutEngine.direction() == RAQM_DIRECTION_TTB){
-        qreal width = m_props[0].glyph.boundingRect().width()/2;
+        qreal width = m_props[0].font.maxCharWidth()/2;
+        qreal offset = m_props[0].glyph.boundingRect().width();
+        QVector<qreal> test;
         for(int i=0; i<m_props.count(); i++){
-            gc.drawGlyphRun(m_topLeft + QPointF(displacement + lastWidth, 0), m_props[i].glyph);
+            gc.drawGlyphRun(m_topLeft + QPointF(displacement, 0), m_props[i].glyph);
 
             auto rect = m_props[i].glyph.boundingRect();
 
@@ -44,16 +46,14 @@ void PaintWidget::paintEvent(QPaintEvent *event)
 
             lastWidth = rect.width();
 
-            displacement += rect.width() + m_lineHeight + 1.0;
+            test.push_back(lastWidth);
+
+            displacement += m_lineHeight + width*2;
         }
 
-        caretPos += QPointF(displacement - m_lineHeight - 1.0 - m_props[0].font.averageCharWidth(), ascent + descent) + m_topLeft;
+        caretPos += QPointF(displacement - width*3, ascent + descent) + m_topLeft;
+        m_boundingRect = QRect(m_topLeft - QPoint(offset, 0), QSize(displacement-width, maxHeight + descent));
 
-        if(m_props.size() == 1){
-            caretPos -= QPointF(lastWidth/2, 0);
-        }
-
-        m_boundingRect = QRect(m_topLeft - QPoint(width, 0), QSize(displacement + lastWidth/2, maxHeight + descent));
     }else{
         for(int i=0; i<m_props.count(); i++){
             gc.drawGlyphRun(m_topLeft + QPointF(0, ascent + displacement), m_props[i].glyph);
@@ -73,7 +73,7 @@ void PaintWidget::paintEvent(QPaintEvent *event)
         m_boundingRect = QRect(m_topLeft, QSize(maxWidth, displacement - m_lineHeight));
     }
 
-    //drawHandles(gc);
+    drawHandles(gc);
     drawIbar(gc, caretPos);
 }
 
